@@ -120,11 +120,11 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const ProductForm = ({ product, onClose, onSuccess }) => {
-  const [name, setName] = useState(product ? product.name : "");
-  const [price, setPrice] = useState(product ? product.price : "");
-  const [description, setDescription] = useState(product ? product.description : "");
-  const [salePrice, setSalePrice] = useState(product ? product.salePrice : "");
-  const [rating, setRating] = useState(product ? product.rating : 0);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+  const [salePrice, setSalePrice] = useState("");
+  const [rating, setRating] = useState(0);
 
   useEffect(() => {
     if (product) {
@@ -141,10 +141,10 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
     try {
       const productData = {
         name,
-        price,
+        price: parseFloat(price),
         description,
-        salePrice: salePrice || null,
-        rating: rating || null,
+        salePrice: salePrice ? parseFloat(salePrice) : null,
+        rating: rating ? parseInt(rating) : null,
       };
 
       if (product && product.id) {
@@ -161,9 +161,8 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
         });
       }
       onSuccess();
-      onClose();
     } catch (error) {
-      console.error("Product operation failed:", error.response.data.message);
+      console.error("Product operation failed:", error.response?.data?.message || error.message);
     }
   };
 
@@ -172,7 +171,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{product ? "Edit Product" : "Add Product"}</h5>
+            <h5 className="modal-title">{product ? "Edit Product" : "Add New Product"}</h5>
             <button type="button" className="close" onClick={onClose}>
               <span>&times;</span>
             </button>
@@ -197,6 +196,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   required
+                  step="0.01"
                 />
               </div>
               <div className="form-group">
@@ -206,6 +206,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   className="form-control"
                   value={salePrice}
                   onChange={(e) => setSalePrice(e.target.value)}
+                  step="0.01"
                 />
               </div>
               <div className="form-group">
@@ -229,7 +230,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                 />
               </div>
               <button type="submit" className="btn btn-primary">
-                {product ? "Update" : "Create"}
+                {product ? "Update" : "Create"} Product
               </button>
               <button type="button" className="btn btn-secondary ml-2" onClick={onClose}>
                 Cancel

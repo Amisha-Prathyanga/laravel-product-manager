@@ -73,12 +73,16 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import ProductForm from './ProductForm';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Trash, Pencil, Plus, LogOut } from 'lucide-react';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const navigate = useNavigate();
 
   const fetchProducts = async () => {
     try {
@@ -89,13 +93,57 @@ const ProductList = () => {
       });
       setProducts(response.data.data);
     } catch (error) {
-      console.error('Failed to fetch products:', error.response.data.message);
+      console.error('Failed to fetch products:', error.response?.data?.message || error.message);
     }
   };
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  const handleEdit = (product) => {
+    setSelectedProduct(product);
+    setShowForm(true);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await axios.delete(`http://localhost:8000/api/products/${id}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        fetchProducts();
+      } catch (error) {
+        console.error('Failed to delete product:', error.response?.data?.message || error.message);
+      }
+    }
+  };
+
+  const handleFormClose = () => {
+    setSelectedProduct(null);
+    setShowForm(false);
+  };
+
+  const handleFormSuccess = () => {
+    fetchProducts();
+    handleFormClose();
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.post('http://localhost:8000/api/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      localStorage.removeItem('token');
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error.response?.data?.message || error.message);
+    }
+  };
 
   return (
     <div className="container-fluid px-4">
@@ -106,6 +154,9 @@ const ProductList = () => {
           <a className="nav-item nav-link" href="#">About</a>
           <a className="nav-item nav-link" href="#">Shop</a>
           <a className="nav-item nav-link" href="#"><i className="bi bi-cart"></i> <span className="badge bg-dark text-white ms-1 rounded-pill">0</span></a>
+          <button className="btn btn-outline-danger" onClick={handleLogout}>
+            <LogOut size={16} /> Logout
+          </button>
         </div>
       </nav>
 
@@ -119,11 +170,15 @@ const ProductList = () => {
       </header>
 
       <div className="container px-4 px-lg-5 mt-5">
+        <button className="btn btn-primary mb-3" onClick={() => setShowForm(true)}>
+          <Plus size={16} /> Add New Product
+        </button>
+
         <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
           {products.map((product) => (
             <div className="col mb-5" key={product.id}>
               <div className="card h-100">
-                {product.sale && <div className="badge bg-dark text-white position-absolute" style={{top: '0.5rem', right: '0.5rem'}}>Sale</div>}
+                {product.salePrice && <div className="badge bg-dark text-white position-absolute" style={{top: '0.5rem', right: '0.5rem'}}>Sale</div>}
                 <img className="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
                 <div className="card-body p-4">
                   <div className="text-center">
@@ -136,21 +191,23 @@ const ProductList = () => {
                       </div>
                     )}
                     {product.salePrice ? (
-                    <span>
+                      <span>
                         <span className="text-muted text-decoration-line-through">${product.price}</span>
-                        <span>${product.salePrice}</span>
-                    </span>
+                        ${product.salePrice}
+                      </span>
                     ) : (
-                    <span>${product.price}</span>
+                      <span>${product.price}</span>
                     )}
-
                   </div>
                 </div>
                 <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
                   <div className="text-center">
-                    <a className="btn btn-outline-dark mt-auto" href="#">
-                      {product.name === "Fancy Product" ? "View options" : "Add to cart"}
-                    </a>
+                    <button className="btn btn-outline-dark mt-auto" onClick={() => handleEdit(product)}>
+                      <Pencil size={16} /> Edit
+                    </button>
+                    <button className="btn btn-outline-danger mt-auto ml-2" onClick={() => handleDelete(product.id)}>
+                      <Trash size={16} /> Delete
+                    </button>
                   </div>
                 </div>
               </div>
@@ -158,6 +215,14 @@ const ProductList = () => {
           ))}
         </div>
       </div>
+
+      {showForm && (
+        <ProductForm
+          product={selectedProduct}
+          onClose={handleFormClose}
+          onSuccess={handleFormSuccess}
+        />
+      )}
     </div>
   );
 };
