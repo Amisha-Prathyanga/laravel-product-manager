@@ -1,120 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import axios from "axios";
-// import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-
-// const ProductForm = ({ product, onClose, onSuccess }) => {
-//   const [name, setName] = useState(product ? product.name : "");
-//   const [price, setPrice] = useState(product ? product.price : "");
-//   const [description, setDescription] = useState(
-//     product ? product.description : ""
-//   );
-
-//   useEffect(() => {
-//     if (product) {
-//       setName(product.name);
-//       setPrice(product.price);
-//       setDescription(product.description);
-//     }
-//   }, [product]);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       if (product && product.id) {
-//         // Update product
-//         await axios.put(
-//           `http://localhost:8000/api/products/${product.id}`,
-//           {
-//             name,
-//             price,
-//             description,
-//           },
-//           {
-//             headers: {
-//               Authorization: `Bearer ${localStorage.getItem("token")}`,
-//             },
-//           }
-//         );
-//       } else {
-//         // Create new product
-//         await axios.post(
-//           "http://localhost:8000/api/products",
-//           {
-//             name,
-//             price,
-//             description,
-//           },
-//           {
-//             headers: {
-//               Authorization: `Bearer ${localStorage.getItem("token")}`,
-//             },
-//           }
-//         );
-//       }
-//       onSuccess();
-//       onClose();
-//     } catch (error) {
-//       console.error("Product operation failed:", error.response.data.message);
-//     }
-//   };
-
-//   return (
-//     <div className="modal-content">
-//       <div className="modal-header">
-//         <h5 className="modal-title">{product ? "Edit Product" : "Add Product"}</h5>
-//         <button type="button" className="close" onClick={onClose}>
-//           <span>&times;</span>
-//         </button>
-//       </div>
-//       <div className="modal-body">
-//         <form onSubmit={handleSubmit}>
-//           <div className="form-group">
-//             <label>Name</label>
-//             <input
-//               type="text"
-//               className="form-control"
-//               placeholder="Name"
-//               value={name}
-//               onChange={(e) => setName(e.target.value)}
-//               required
-//             />
-//           </div>
-//           <div className="form-group">
-//             <label>Price</label>
-//             <input
-//               type="number"
-//               className="form-control"
-//               placeholder="Price"
-//               value={price}
-//               onChange={(e) => setPrice(e.target.value)}
-//               required
-//             />
-//           </div>
-//           <div className="form-group">
-//             <label>Description</label>
-//             <textarea
-//               className="form-control"
-//               placeholder="Description"
-//               value={description}
-//               onChange={(e) => setDescription(e.target.value)}
-//               required
-//             />
-//           </div>
-//           <button type="submit" className="btn btn-primary">
-//             {product ? "Update" : "Create"}
-//           </button>
-//           <button type="button" className="btn btn-secondary ml-2" onClick={onClose}>
-//             Cancel
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ProductForm;
-
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -123,46 +6,66 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [salePrice, setSalePrice] = useState("");
-  const [rating, setRating] = useState(0);
+  const [image, setImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     if (product) {
       setName(product.name);
       setPrice(product.price);
       setDescription(product.description);
-      setSalePrice(product.salePrice || "");
-      setRating(product.rating || 0);
+      setPreviewImage(product.image);
     }
   }, [product]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setPreviewImage(URL.createObjectURL(file));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const productData = {
-        name,
-        price: parseFloat(price),
-        description,
-        salePrice: salePrice ? parseFloat(salePrice) : null,
-        rating: rating ? parseInt(rating) : null,
-      };
-
-      if (product && product.id) {
-        await axios.put(`http://localhost:8000/api/products/${product.id}`, productData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-      } else {
-        await axios.post("http://localhost:8000/api/products", productData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+      console.log("Product ID:", product?.id);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("description", description);
+      if (image) {
+        formData.append("image", image);
       }
+  
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      };
+  
+      let response; // Declare a variable to hold the response
+  
+      if (product && product.id) {
+        // Update existing product
+        response = await axios.put(`http://localhost:8000/api/products/${product.id}`, formData, config);
+      } else {
+        // Create new product
+        response = await axios.post("http://localhost:8000/api/products", formData, config);
+      }
+  
+      console.log("Server response:", response.data); // Now response is defined
       onSuccess();
     } catch (error) {
-      console.error("Product operation failed:", error.response?.data?.message || error.message);
+      console.error("Product operation failed:", error);
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+        console.error("Response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
     }
   };
 
@@ -200,27 +103,6 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Sale Price (optional)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={salePrice}
-                  onChange={(e) => setSalePrice(e.target.value)}
-                  step="0.01"
-                />
-              </div>
-              <div className="form-group">
-                <label>Rating (0-5)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  value={rating}
-                  onChange={(e) => setRating(Math.min(5, Math.max(0, parseInt(e.target.value) || 0)))}
-                  min="0"
-                  max="5"
-                />
-              </div>
-              <div className="form-group">
                 <label>Description</label>
                 <textarea
                   className="form-control"
@@ -229,6 +111,20 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   required
                 />
               </div>
+              <div className="form-group">
+                <label>Image</label>
+                <input
+                  type="file"
+                  className="form-control-file"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                />
+              </div>
+              {previewImage && (
+                <div className="form-group">
+                  <img src={previewImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+                </div>
+              )}
               <button type="submit" className="btn btn-primary">
                 {product ? "Update" : "Create"} Product
               </button>
@@ -244,3 +140,4 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
 };
 
 export default ProductForm;
+
