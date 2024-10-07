@@ -108,7 +108,7 @@ class ProductController extends BaseController
             'name' => 'required',
             'price' => 'required',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240'
         ]);
    
         if($validator->fails()){
