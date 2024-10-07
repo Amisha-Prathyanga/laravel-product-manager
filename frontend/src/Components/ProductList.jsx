@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ProductForm from "./ProductForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Trash, Pencil, Plus, LogOut, Search, FilterX } from "lucide-react";
+import Swal from "sweetalert2";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -85,18 +86,33 @@ const ProductList = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
       try {
         await axios.delete(`http://localhost:8000/api/products/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+
+        Swal.fire("Deleted!", "Product has been deleted.", "success");
+
         fetchProducts(currentPage);
       } catch (error) {
-        console.error(
-          "Failed to delete product:",
-          error.response?.data?.message || error.message
+        Swal.fire(
+          "Error!",
+          "Failed to delete product: " +
+            (error.response?.data?.message || error.message),
+          "error"
         );
       }
     }

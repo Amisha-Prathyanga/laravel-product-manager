@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Swal from "sweetalert2";
 
 const ProductForm = ({ product, onClose, onSuccess }) => {
   const [name, setName] = useState("");
@@ -26,6 +27,17 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Show loading state
+    Swal.fire({
+      title: "Processing...",
+      html: "Please wait...",
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     try {
       console.log("Product ID:", product?.id);
       const formData = new FormData();
@@ -35,46 +47,69 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
       if (image) {
         formData.append("image", image);
       }
-  
+
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       };
-  
+
       let response; // Declare a variable to hold the response
-  
+
       if (product && product.id) {
         // Update existing product
-        response = await axios.put(`http://localhost:8000/api/products/${product.id}`, formData, config);
+        response = await axios.put(
+          `http://localhost:8000/api/products/${product.id}`,
+          formData,
+          config
+        );
+        await Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Product updated successfully",
+          timer: 1500,
+        });
       } else {
         // Create new product
-        response = await axios.post("http://localhost:8000/api/products", formData, config);
+        response = await axios.post(
+          "http://localhost:8000/api/products",
+          formData,
+          config
+        );
+        await Swal.fire({
+          icon: "success",
+          title: "Success!",
+          text: "Product created successfully",
+          timer: 1500,
+        });
       }
-  
+
       console.log("Server response:", response.data); // Now response is defined
       onSuccess();
     } catch (error) {
       console.error("Product operation failed:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-        console.error("Response headers:", error.response.headers);
-      } else if (error.request) {
-        console.error("No response received:", error.request);
-      } else {
-        console.error("Error message:", error.message);
-      }
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `Failed to ${product ? "update" : "create"} product: ${
+          error.response?.data?.message || error.message
+        }`,
+      });
     }
   };
 
   return (
-    <div className="modal" style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div
+      className="modal"
+      style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
+    >
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{product ? "Edit Product" : "Add New Product"}</h5>
+            <h5 className="modal-title">
+              {product ? "Edit Product" : "Add New Product"}
+            </h5>
             <button type="button" className="close" onClick={onClose}>
               <span>&times;</span>
             </button>
@@ -122,13 +157,21 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
               </div>
               {previewImage && (
                 <div className="form-group">
-                  <img src={previewImage} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} />
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    style={{ maxWidth: "100%", maxHeight: "200px" }}
+                  />
                 </div>
               )}
               <button type="submit" className="btn btn-primary">
                 {product ? "Update" : "Create"} Product
               </button>
-              <button type="button" className="btn btn-secondary ml-2" onClick={onClose}>
+              <button
+                type="button"
+                className="btn btn-secondary ml-2"
+                onClick={onClose}
+              >
                 Cancel
               </button>
             </form>
@@ -140,4 +183,3 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
 };
 
 export default ProductForm;
-
