@@ -54,6 +54,39 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+
+.product-image-wrapper img {
+  max-height: 400px;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-image-wrapper img:hover {
+  transform: scale(1.05);
+}
+
+h2 {
+  color: #343a40;
+}
+
+.lead {
+  font-size: 1.2rem;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+.shadow-sm {
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

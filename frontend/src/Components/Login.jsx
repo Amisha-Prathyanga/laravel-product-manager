@@ -1,56 +1,7 @@
-// import React, { useState } from "react";
-// import axios from "axios";
-// import { useNavigate } from "react-router-dom";
-
-// const Login = () => {
-//   const [email, setEmail] = useState("");
-//   const [password, setPassword] = useState("");
-//   const navigate = useNavigate();
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const response = await axios.post("http://localhost:8000/api/login", {
-//         email,
-//         password,
-//       });
-//       localStorage.setItem("token", response.data.data.token);
-//       navigate("/products");
-//     } catch (error) {
-//       console.error("Login failed:", error.response.data.message);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <h2>Login</h2>
-//       <form onSubmit={handleLogin}>
-//         <input
-//           type="email"
-//           placeholder="Email"
-//           value={email}
-//           onChange={(e) => setEmail(e.target.value)}
-//           required
-//         />
-//         <input
-//           type="password"
-//           placeholder="Password"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//           required
-//         />
-//         <button type="submit">Login</button>
-//       </form>
-//       <button onClick={() => navigate("/register")}>Register</button>
-//     </div>
-//   );
-// };
-
-// export default Login;
-
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -65,9 +16,28 @@ const Login = () => {
         password,
       });
       localStorage.setItem("token", response.data.data.token);
+
+      // Show success alert
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome back!",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       navigate("/products");
     } catch (error) {
       console.error("Login failed:", error.response.data.message);
+
+      // Show error alert
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Email or Password",
+        text:
+          error.response?.data.message ||
+          "An error occurred. Please try again.",
+      });
     }
   };
 
@@ -119,4 +89,3 @@ const Login = () => {
 };
 
 export default Login;
-

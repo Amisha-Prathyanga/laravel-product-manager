@@ -110,13 +110,10 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
             <h5 className="modal-title">
               {product ? "Edit Product" : "Add New Product"}
             </h5>
-            <button type="button" className="close" onClick={onClose}>
-              <span>&times;</span>
-            </button>
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
-              <div className="form-group">
+              <div className="form-group mb-3">
                 <label>Name</label>
                 <input
                   type="text"
@@ -126,7 +123,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   required
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group mb-3">
                 <label>Price</label>
                 <input
                   type="number"
@@ -137,7 +134,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   step="0.01"
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group mb-3">
                 <label>Description</label>
                 <textarea
                   className="form-control"
@@ -146,8 +143,8 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                   required
                 />
               </div>
-              <div className="form-group">
-                <label>Image</label>
+              <div className="form-group mb-3">
+                <label>Image </label>
                 <input
                   type="file"
                   className="form-control-file"
@@ -156,24 +153,36 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                 />
               </div>
               {previewImage && (
-                <div className="form-group">
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    style={{ maxWidth: "100%", maxHeight: "200px" }}
-                  />
+                <div className="form-group mb-3">
+                  <label>Image Preview</label>
+                  <div
+                    className="border rounded p-2"
+                    style={{ textAlign: "center" }}
+                  >
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      style={{
+                        maxWidth: "100%",
+                        maxHeight: "200px",
+                        borderRadius: "5px",
+                      }}
+                    />
+                  </div>
                 </div>
               )}
-              <button type="submit" className="btn btn-primary">
-                {product ? "Update" : "Create"} Product
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary ml-2"
-                onClick={onClose}
-              >
-                Cancel
-              </button>
+              <div className="d-flex justify-content-between mt-4">
+                <button type="submit" className="btn btn-primary">
+                  {product ? "Update" : "Create"} Product
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={onClose}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         </div>

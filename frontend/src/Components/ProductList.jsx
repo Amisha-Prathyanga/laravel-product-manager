@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from "react";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import ProductForm from "./ProductForm";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Trash, Pencil, Plus, LogOut, Search, FilterX } from "lucide-react";
@@ -152,25 +152,14 @@ const ProductList = () => {
   return (
     <div className="container-fluid px-4">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand" href="#">
-          Start Bootstrap
-        </a>
-        <div className="navbar-nav ml-auto">
-          <a className="nav-item nav-link" href="#">
-            Home
-          </a>
-          <a className="nav-item nav-link" href="#">
-            About
-          </a>
-          <a className="nav-item nav-link" href="#">
-            Shop
-          </a>
-          <a className="nav-item nav-link" href="#">
-            <i className="bi bi-cart"></i>{" "}
-            <span className="badge bg-dark text-white ms-1 rounded-pill">
-              0
-            </span>
-          </a>
+        {/* <a className="navbar-brand" href="#">
+          Breadcrumbs Product Catalogue
+        </a> */}
+        <div className="d-flex align-items-center ms-auto">
+          {/* <span className="me-2">
+            {localStorage.getItem("name") || "Guest"}
+          </span> */}
+          {/* If no name is found in local storage, show "Guest" */}
           <button className="btn btn-outline-danger" onClick={handleLogout}>
             <LogOut size={16} /> Logout
           </button>
@@ -180,9 +169,11 @@ const ProductList = () => {
       <header className="bg-dark py-5">
         <div className="container px-4 px-lg-5 my-5">
           <div className="text-center text-white">
-            <h1 className="display-4 fw-bolder">Shop in style</h1>
+            <h1 className="display-4 fw-bolder">
+              Breadcrumbs Product Catalogue
+            </h1>
             <p className="lead fw-normal text-white-50 mb-0">
-              With this shop homepage template
+              shop as you wish
             </p>
           </div>
         </div>
@@ -191,10 +182,7 @@ const ProductList = () => {
       <div className="container px-4 px-lg-5 mt-5">
         <div className="row mb-4">
           <div className="col-md-6">
-            <button
-              className="btn btn-primary"
-              onClick={() => setShowForm(true)}
-            >
+            <button className="btn btn-dark" onClick={() => setShowForm(true)}>
               <Plus size={16} /> Add New Product
             </button>
           </div>
@@ -233,10 +221,7 @@ const ProductList = () => {
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
               />
-              <button
-                className="btn btn-outline-secondary"
-                onClick={resetFilters}
-              >
+              <button className="btn btn-dark" onClick={resetFilters}>
                 <FilterX size={16} /> Reset
               </button>
             </div>
@@ -260,7 +245,7 @@ const ProductList = () => {
                   />
                   <div className="card-body p-4">
                     <div className="text-center">
-                      <h5 className="fw-bolder">{product.name}</h5>$
+                      <h5 className="fw-bolder"><Link to={`/products/${product.id}`}>{product.name}</Link></h5>$
                       {product.price}
                     </div>
                   </div>

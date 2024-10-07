@@ -68,6 +68,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -85,9 +86,27 @@ const Register = () => {
         password,
         c_password,
       });
+
+      // Show success alert
+      Swal.fire({
+        icon: "success",
+        title: "Registration Successful",
+        text: "You can now log in.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       navigate("/");
     } catch (error) {
       console.error("Registration failed:", error.response.data.message);
+
+      // Show error alert
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text: error.response?.data.message || "An error occurred. Please try again.",
+      });
+      
     }
   };
 
