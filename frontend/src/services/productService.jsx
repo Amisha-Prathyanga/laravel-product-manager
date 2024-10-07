@@ -37,7 +37,7 @@ export const deleteProduct = async (id) => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     });
-  
+
     if (result.isConfirmed) {
       try {
         await axios.delete(`http://localhost:8000/api/products/${id}`, {
@@ -45,7 +45,7 @@ export const deleteProduct = async (id) => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-  
+
         Swal.fire("Deleted!", "Product has been deleted.", "success");
       } catch (error) {
         Swal.fire(
@@ -57,4 +57,5 @@ export const deleteProduct = async (id) => {
       }
     }
   };
-  
+
+

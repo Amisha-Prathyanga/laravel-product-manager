@@ -1,26 +1,3 @@
-// import axios from "axios";
-
-// const api = axios.create({
-//   baseURL: "http://localhost:8000/api", // Adjust the URL based on your backend API
-// });
-
-// export const registerUser = (data) => api.post("/register", data);
-// export const loginUser = (data) => api.post("/login", data);
-// export const fetchProducts = () => api.get("/products");
-// export const addProduct = (data, token) =>
-//   api.post("/products", data, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-// export const editProduct = (id, data, token) =>
-//   api.put(`/products/${id}`, data, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-// export const deleteProduct = (id, token) =>
-//   api.delete(`/products/${id}`, {
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-
-
 // src/api.jsx
 import axios from "axios";
 
@@ -88,14 +65,6 @@ export const addProduct = async (data) => {
     }
     return response.data.data;
 };
-
-// export const editProduct = async (id, data) => {
-//     const response = await api.put(`/products/${id}`, data);
-//     if (!response.data.success) {
-//         throw new Error(response.data.message || 'Failed to update product');
-//     }
-//     return response.data.data;
-// };
 
 export const editProduct = async (id, formData) => {
     const config = {

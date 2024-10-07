@@ -1,4 +1,3 @@
-// SearchAndFilter.jsx
 import React from "react";
 import { Plus, Search, FilterX } from "lucide-react";
 
