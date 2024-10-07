@@ -16,7 +16,14 @@ const ProductCard = ({ product, onEdit, onDelete }) => (
         />
         <div className="card-body p-4">
           <div className="text-center">
-            <h5 className="fw-bolder">{product.name}</h5>${product.price}
+            <h5 className="fw-bolder">{product.name}</h5>
+            <p className="card-text">${product.price}</p>
+            <p
+              className="card-text text-muted mb-0 text-decoration-none"
+              style={{ fontSize: "0.9rem" }}
+            >
+              {product.description}
+            </p>
           </div>
         </div>
         <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">

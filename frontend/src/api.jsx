@@ -89,8 +89,23 @@ export const addProduct = async (data) => {
     return response.data.data;
 };
 
-export const editProduct = async (id, data) => {
-    const response = await api.put(`/products/${id}`, data);
+// export const editProduct = async (id, data) => {
+//     const response = await api.put(`/products/${id}`, data);
+//     if (!response.data.success) {
+//         throw new Error(response.data.message || 'Failed to update product');
+//     }
+//     return response.data.data;
+// };
+
+export const editProduct = async (id, formData) => {
+    const config = {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        }
+    };
+    // Use POST method with _method=PUT for Laravel's form-data handling
+    formData.append('_method', 'PUT');
+    const response = await api.post(`/products/${id}`, formData, config);
     if (!response.data.success) {
         throw new Error(response.data.message || 'Failed to update product');
     }

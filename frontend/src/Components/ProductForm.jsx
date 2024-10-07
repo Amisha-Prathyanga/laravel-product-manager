@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { addProduct, editProduct } from "../api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
 
@@ -28,7 +28,6 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Show loading state
     Swal.fire({
       title: "Processing...",
       html: "Please wait...",
@@ -39,7 +38,6 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
     });
 
     try {
-      console.log("Product ID:", product?.id);
       const formData = new FormData();
       formData.append("name", name);
       formData.append("price", price);
@@ -48,22 +46,8 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
         formData.append("image", image);
       }
 
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      };
-
-      let response; // Declare a variable to hold the response
-
       if (product && product.id) {
-        // Update existing product
-        response = await axios.put(
-          `http://localhost:8000/api/products/${product.id}`,
-          formData,
-          config
-        );
+        await editProduct(product.id, formData);
         await Swal.fire({
           icon: "success",
           title: "Success!",
@@ -71,12 +55,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
           timer: 1500,
         });
       } else {
-        // Create new product
-        response = await axios.post(
-          "http://localhost:8000/api/products",
-          formData,
-          config
-        );
+        await addProduct(formData);
         await Swal.fire({
           icon: "success",
           title: "Success!",
@@ -85,7 +64,6 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
         });
       }
 
-      console.log("Server response:", response.data); // Now response is defined
       onSuccess();
     } catch (error) {
       console.error("Product operation failed:", error);
@@ -144,7 +122,7 @@ const ProductForm = ({ product, onClose, onSuccess }) => {
                 />
               </div>
               <div className="form-group mb-3">
-                <label>Image </label>
+                <label>Image</label>
                 <input
                   type="file"
                   className="form-control-file"
