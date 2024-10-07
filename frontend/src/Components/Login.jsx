@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -7,6 +7,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("authToken"); // Example token check
+    if (isAuthenticated) {
+      navigate("/products"); // Redirect to dashboard if already logged in
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
