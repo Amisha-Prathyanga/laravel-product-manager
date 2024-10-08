@@ -171,11 +171,11 @@
 
 // export default ProductForm;
 
-
 import React, { useState, useEffect } from "react";
-import { addProduct, editProduct } from "../api";
+import { editProduct } from "../api";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Swal from "sweetalert2";
+import { addProduct } from "../services/productService";
 
 const ProductForm = ({ product, onClose, onSuccess }) => {
   const [name, setName] = useState("");

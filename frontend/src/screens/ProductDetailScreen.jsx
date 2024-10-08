@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axiosWithToken from "../api/axiosWithToken";
 import { Tag, Package, DollarSign, ArrowLeft } from "lucide-react";
-
-const ProductDetail = () => {
+const ProductDetailScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -14,14 +13,16 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `http://localhost:8000/api/products/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axiosWithToken.get(`api/products/${id}`);
+
+        // const response = await axios.get(
+        //   `http://localhost:8000/api/products/${id}`,
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   }
+        // );
         if (response.data.success && response.data.data) {
           setProduct(response.data.data);
         } else {
@@ -221,4 +222,4 @@ const styles = `
 }
 `;
 
-export default ProductDetail;
+export default ProductDetailScreen;

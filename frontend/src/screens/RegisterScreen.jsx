@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Register = () => {
+const RegisterScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +29,7 @@ const Register = () => {
         showConfirmButton: false,
       });
 
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error("Registration failed:", error.response.data.message);
 
@@ -37,9 +37,10 @@ const Register = () => {
       Swal.fire({
         icon: "error",
         title: "Registration Failed",
-        text: error.response?.data.message || "An error occurred. Please try again.",
+        text:
+          error.response?.data.message ||
+          "An error occurred. Please try again.",
       });
-
     }
   };
 
@@ -97,10 +98,7 @@ const Register = () => {
             </button>
           </form>
           <div className="mt-3">
-            <button
-              onClick={() => navigate("/")}
-              className="btn btn-link"
-            >
+            <button onClick={() => navigate("/login")} className="btn btn-link">
               Already have an account? Login
             </button>
           </div>
@@ -110,5 +108,4 @@ const Register = () => {
   );
 };
 
-export default Register;
-
+export default RegisterScreen;

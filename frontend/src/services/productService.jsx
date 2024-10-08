@@ -1,5 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import axiosWithToken from "../api/axiosWithToken";
 
 export const fetchProducts = async (
   page,
@@ -55,5 +56,27 @@ export const deleteProduct = async (id) => {
         "error"
       );
     }
+  }
+};
+
+export const addProduct = async (formData) => {
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+  try {
+    const response = await axiosWithToken.post(
+      "api/products",
+      formData,
+      config
+    );
+    if (!response.data.success) {
+      throw new Error(response.data.message || "Failed to add product");
+    }
+    return response.data.data;
+  } catch (error) {
+    console.error("Add Product Error:", error.response?.data || error.message);
+    throw error;
   }
 };

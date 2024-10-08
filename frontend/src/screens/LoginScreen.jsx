@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axiosBase from "../api/axiosBase";
 import Swal from "sweetalert2";
+import { login } from "../services/authService";
 
-const Login = ({ setIsAuthenticated }) => {
+const LoginScreen = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,30 +19,37 @@ const Login = ({ setIsAuthenticated }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/login", {
-        email,
-        password,
-      });
+      // Await the result of the login function
+      const response = await login(email, password);
 
-      const expirationTime = new Date().getTime() + 3600000; // 1 hour from now
+      // Check if the login was successful
+      if (response.data && response.data.success) {
+        const expirationTime = new Date().getTime() + 3600000; // 1 hour from now
 
-      localStorage.setItem("token", response.data.data.token);
-      localStorage.setItem("tokenExpiration", expirationTime.toString());
+        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("tokenExpiration", expirationTime.toString());
 
-      setIsAuthenticated(true); // Update the authentication state
+        setIsAuthenticated(true); // Update the authentication state
 
-      // Show success alert
-      Swal.fire({
-        icon: "success",
-        title: "Login Successful",
-        text: "Welcome back!",
-        timer: 1500,
-        showConfirmButton: false,
-      });
+        // Show success alert
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Welcome back!",
+          timer: 1500,
+          showConfirmButton: false,
+        });
 
-      navigate("/products");
+        navigate("/products");
+      } else {
+        // Handle login failure case
+        throw new Error(response.data.message || "Login failed");
+      }
     } catch (error) {
-      console.error("Login failed:", error.response?.data.message);
+      console.error(
+        "Login failed:",
+        error.response?.data.message || error.message
+      );
 
       // Show error alert
       Swal.fire({
@@ -101,4 +109,4 @@ const Login = ({ setIsAuthenticated }) => {
   );
 };
 
-export default Login;
+export default LoginScreen;

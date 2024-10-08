@@ -157,23 +157,23 @@ export const fetchProducts = () => api.get("/products");
 //     return response.data.data;
 // };
 
-export const addProduct = async (formData) => {
-  const config = {
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  };
-  try {
-    const response = await api.post("/products", formData, config);
-    if (!response.data.success) {
-      throw new Error(response.data.message || "Failed to add product");
-    }
-    return response.data.data;
-  } catch (error) {
-    console.error("Add Product Error:", error.response?.data || error.message);
-    throw error;
-  }
-};
+// export const addProduct = async (formData) => {
+//   const config = {
+//     headers: {
+//       "Content-Type": "multipart/form-data",
+//     },
+//   };
+//   try {
+//     const response = await api.post("/products", formData, config);
+//     if (!response.data.success) {
+//       throw new Error(response.data.message || "Failed to add product");
+//     }
+//     return response.data.data;
+//   } catch (error) {
+//     console.error("Add Product Error:", error.response?.data || error.message);
+//     throw error;
+//   }
+// };
 
 // export const editProduct = async (id, data) => {
 //     const response = await api.put(`/products/${id}`, data);

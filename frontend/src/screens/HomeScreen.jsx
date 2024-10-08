@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import ProductForm from "./ProductForm";
-import Header from "./Header";
-import SearchAndFilter from "./SearchAndFilter";
-import ProductGrid from "./ProductGrid";
-import Pagination from "./Pagination";
+
 import { fetchProducts, deleteProduct } from "../services/productService";
 import { logout } from "../services/authService";
+import ProductForm from "../components/ProductForm";
+import SearchAndFilter from "../components/SearchAndFilter";
+import ProductGrid from "../components/ProductGrid";
+import Pagination from "../components/Pagination";
+import Header from "../components/Header";
+import useAuth from "../hooks/useAuth";
 
-const ProductList = () => {
+const HomeScreen = () => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -21,6 +22,7 @@ const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useAuth();
 
   useEffect(() => {
     fetchProducts(currentPage, setProducts, setFilteredProducts, setTotalPages);
@@ -78,8 +80,10 @@ const ProductList = () => {
   };
 
   const handleLogout = async () => {
-    await logout();
-    navigate("/");
+    setIsAuthenticated(false);
+    await logout(navigate);
+
+    // navigate("/");
   };
 
   return (
@@ -118,5 +122,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
-
+export default HomeScreen;

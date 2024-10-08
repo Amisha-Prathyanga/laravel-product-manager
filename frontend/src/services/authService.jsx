@@ -1,7 +1,21 @@
 import axios from "axios";
 import Swal from "sweetalert2";
+import axiosBase from "../api/axiosBase";
 
-export const logout = async () => {
+export const login = async (email, password) => {
+  try {
+    const response = await axiosBase.post("api/login", {
+      email,
+      password,
+    });
+
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const logout = async (navigate) => {
   try {
     await axios.post(
       "http://localhost:8000/api/logout",
