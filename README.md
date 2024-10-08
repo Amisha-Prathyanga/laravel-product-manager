@@ -7,7 +7,6 @@ This is the backend for the product management application built with Laravel. I
 -   [Features](#features)
 -   [Installation](#installation)
 -   [Usage](#usage)
--   [Sanctum Authentication](#sanctum-authentication)
 -   [API Endpoints](#api-endpoints)
 -   [Troubleshooting](#troubleshooting)
 -   [Project Structure](#project-structure)
