@@ -1,13 +1,13 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "./components/Login";
+import Login from "./Components/Login";
 import Register from "./Components/Register";
 import ProductList from "./Components/ProductList";
 import ProductDetail from "./Components/ProductDetail";
 import NotFound from "./Components/NotFound";
 
 const App = () => {
-  const isAuthenticated = localStorage.getItem("token");
+  const isAuthenticated = sessionStorage.getItem("token");
 
   return (
     <Routes>

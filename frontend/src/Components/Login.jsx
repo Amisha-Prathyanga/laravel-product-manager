@@ -9,7 +9,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem("authToken"); // Example token check
+    const isAuthenticated = sessionStorage.getItem("authToken"); // Example token check
     if (isAuthenticated) {
       navigate("/products"); // Redirect to dashboard if already logged in
     }
@@ -22,7 +22,7 @@ const Login = () => {
         email,
         password,
       });
-      localStorage.setItem("token", response.data.data.token);
+      sessionStorage.setItem("token", response.data.data.token);
 
       // Show success alert
       Swal.fire({

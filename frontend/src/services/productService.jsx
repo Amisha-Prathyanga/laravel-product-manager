@@ -12,7 +12,7 @@ export const fetchProducts = async (
       `http://localhost:8000/api/products?per_page=8&page=${page}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
         },
       }
     );
@@ -42,7 +42,7 @@ export const deleteProduct = async (id) => {
       try {
         await axios.delete(`http://localhost:8000/api/products/${id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
 
