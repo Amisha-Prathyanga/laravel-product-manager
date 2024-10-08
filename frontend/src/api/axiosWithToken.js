@@ -1,4 +1,3 @@
-// Modify your axiosWithToken setup to include an interceptor
 import axios from "axios";
 import { BASE_URL } from "./apiConstants";
 

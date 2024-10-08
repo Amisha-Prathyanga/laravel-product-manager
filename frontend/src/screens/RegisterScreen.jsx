@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import axiosWithToken from "../api/axiosWithToken";
 
 const RegisterScreen = () => {
   const [name, setName] = useState("");
@@ -13,7 +14,7 @@ const RegisterScreen = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/api/register", {
+      await axiosWithToken.post("api/register", {
         name,
         email,
         password,

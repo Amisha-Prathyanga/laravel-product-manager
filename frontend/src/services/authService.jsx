@@ -1,10 +1,9 @@
-import axios from "axios";
 import Swal from "sweetalert2";
-import axiosBase from "../api/axiosBase";
+import axiosWithToken from "./../api/axiosWithToken";
 
 export const login = async (email, password) => {
   try {
-    const response = await axiosBase.post("api/login", {
+    const response = await axiosWithToken.post("api/login", {
       email,
       password,
     });
@@ -17,15 +16,7 @@ export const login = async (email, password) => {
 
 export const logout = async (navigate) => {
   try {
-    await axios.post(
-      "http://localhost:8000/api/logout",
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+    await axiosWithToken.post("api/logout", {});
     localStorage.removeItem("token");
 
     // Show SweetAlert on successful logout

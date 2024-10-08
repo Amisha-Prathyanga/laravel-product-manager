@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axiosWithToken from "../api/axiosWithToken";
 import { Tag, Package, DollarSign, ArrowLeft } from "lucide-react";
+
 const ProductDetailScreen = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -14,15 +15,6 @@ const ProductDetailScreen = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axiosWithToken.get(`api/products/${id}`);
-
-        // const response = await axios.get(
-        //   `http://localhost:8000/api/products/${id}`,
-        //   {
-        //     headers: {
-        //       Authorization: `Bearer ${token}`,
-        //     },
-        //   }
-        // );
         if (response.data.success && response.data.data) {
           setProduct(response.data.data);
         } else {
@@ -185,41 +177,42 @@ const ProductDetailScreen = () => {
           </div>
         </div>
       </div>
+
+      <style jsx>
+        {`
+          .product-image-container {
+            transition: all 0.3s ease;
+          }
+
+          .image-wrapper img {
+            transition: transform 0.3s ease;
+          }
+
+          .image-wrapper:hover img {
+            transform: scale(1.05);
+          }
+
+          .pricing-section {
+            border-left: 4px solid #28a745;
+          }
+
+          .features-section {
+            border-left: 4px solid #007bff;
+          }
+
+          .description-section {
+            border-left: 4px solid #6c757d;
+            padding-left: 1rem;
+          }
+
+          .back-button:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+        `}
+      </style>
     </div>
   );
 };
-
-// Add these styles to your CSS file
-const styles = `
-.product-image-container {
-  transition: all 0.3s ease;
-}
-
-.image-wrapper img {
-  transition: transform 0.3s ease;
-}
-
-.image-wrapper:hover img {
-  transform: scale(1.05);
-}
-
-.pricing-section {
-  border-left: 4px solid #28a745;
-}
-
-.features-section {
-  border-left: 4px solid #007bff;
-}
-
-.description-section {
-  border-left: 4px solid #6c757d;
-  padding-left: 1rem;
-}
-
-.back-button:hover {
-  transform: translateX(-5px);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-`;
 
 export default ProductDetailScreen;

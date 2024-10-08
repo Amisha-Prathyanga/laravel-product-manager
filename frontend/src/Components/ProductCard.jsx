@@ -92,10 +92,24 @@ const ProductCard = ({ product, onEdit, onDelete }) => (
         </div>
       </div>
     </Link>
+
+    <style jsx>{`
+      .hover-shadow:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .btn-outline-primary:hover,
+      .btn-outline-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+      }
+    `}</style>
+    
   </div>
 );
 
-// Add these styles to your CSS file
+
 const styles = `
 .hover-shadow:hover {
   transform: translateY(-5px);

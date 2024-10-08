@@ -1,4 +1,3 @@
-import axios from "axios";
 import Swal from "sweetalert2";
 import axiosWithToken from "../api/axiosWithToken";
 
@@ -9,13 +8,8 @@ export const fetchProducts = async (
   setTotalPages
 ) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8000/api/products?per_page=8&page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
+    const response = await axiosWithToken.get(
+      `api/products?per_page=8&page=${page}`
     );
     setProducts(response.data.data);
     setFilteredProducts(response.data.data);
@@ -41,7 +35,7 @@ export const deleteProduct = async (id) => {
 
   if (result.isConfirmed) {
     try {
-      await axios.delete(`http://localhost:8000/api/products/${id}`, {
+      await axiosWithToken.delete(`/api/products/${id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -79,4 +73,23 @@ export const addProduct = async (formData) => {
     console.error("Add Product Error:", error.response?.data || error.message);
     throw error;
   }
+};
+
+export const editProduct = async (id, formData) => {
+  const config = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  };
+  // Use POST method with _method=PUT for Laravel's form-data handling
+  formData.append("_method", "PUT");
+  const response = await axiosWithToken.post(
+    `api/products/${id}`,
+    formData,
+    config
+  );
+  if (!response.data.success) {
+    throw new Error(response.data.message || "Failed to update product");
+  }
+  return response.data.data;
 };

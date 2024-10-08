@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axiosBase from "../api/axiosBase";
 import Swal from "sweetalert2";
 import { login } from "../services/authService";
 
