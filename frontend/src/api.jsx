@@ -14,7 +14,7 @@
 // // Add request interceptor for token
 // api.interceptors.request.use(
 //     (config) => {
-//         const token = sessionStorage.getItem('token');
+//         const token = localStorage.getItem('token');
 //         if (token) {
 //             config.headers.Authorization = `Bearer ${token}`;
 //         }
@@ -105,7 +105,7 @@ const api = axios.create({
 // Add request interceptor for token
 api.interceptors.request.use(
   (config) => {
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

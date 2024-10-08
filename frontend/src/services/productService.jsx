@@ -12,7 +12,7 @@ export const fetchProducts = async (
       `http://localhost:8000/api/products?per_page=8&page=${page}`,
       {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -28,34 +28,32 @@ export const fetchProducts = async (
 };
 
 export const deleteProduct = async (id) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    });
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  });
 
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(`http://localhost:8000/api/products/${id}`, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        });
+  if (result.isConfirmed) {
+    try {
+      await axios.delete(`http://localhost:8000/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
-        Swal.fire("Deleted!", "Product has been deleted.", "success");
-      } catch (error) {
-        Swal.fire(
-          "Error!",
-          "Failed to delete product: " +
-            (error.response?.data?.message || error.message),
-          "error"
-        );
-      }
+      Swal.fire("Deleted!", "Product has been deleted.", "success");
+    } catch (error) {
+      Swal.fire(
+        "Error!",
+        "Failed to delete product: " +
+          (error.response?.data?.message || error.message),
+        "error"
+      );
     }
-  };
-
-
+  }
+};

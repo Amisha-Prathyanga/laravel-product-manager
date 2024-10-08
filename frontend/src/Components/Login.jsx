@@ -3,15 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Login = () => {
+const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAuthenticated = sessionStorage.getItem("authToken"); // Example token check
-    if (isAuthenticated) {
-      navigate("/products"); // Redirect to dashboard if already logged in
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/products");
     }
   }, [navigate]);
 
@@ -22,7 +22,13 @@ const Login = () => {
         email,
         password,
       });
-      sessionStorage.setItem("token", response.data.data.token);
+
+      const expirationTime = new Date().getTime() + 3600000; // 1 hour from now
+
+      localStorage.setItem("token", response.data.data.token);
+      localStorage.setItem("tokenExpiration", expirationTime.toString());
+
+      setIsAuthenticated(true); // Update the authentication state
 
       // Show success alert
       Swal.fire({
@@ -35,7 +41,7 @@ const Login = () => {
 
       navigate("/products");
     } catch (error) {
-      console.error("Login failed:", error.response.data.message);
+      console.error("Login failed:", error.response?.data.message);
 
       // Show error alert
       Swal.fire({

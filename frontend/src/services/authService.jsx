@@ -8,11 +8,11 @@ export const logout = async () => {
       {},
       {
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
-    sessionStorage.removeItem("token");
+    localStorage.removeItem("token");
 
     // Show SweetAlert on successful logout
     Swal.fire({

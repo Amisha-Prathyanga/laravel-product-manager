@@ -13,7 +13,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const token = sessionStorage.getItem("token");
+        const token = localStorage.getItem("token");
         const response = await axios.get(
           `http://localhost:8000/api/products/${id}`,
           {
